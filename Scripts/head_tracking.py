@@ -3,24 +3,42 @@ import mediapipe as mp
 import numpy as np
 import socket
 import json
+import sys
+import os
+
+# Log per debug - salva nella stessa cartella dello script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+log_path = os.path.join(script_dir, "python_debug.log")
+log_file = open(log_path, "w", buffering=1)
+sys.stdout = log_file
+sys.stderr = log_file
 
 # Server TCP
 HOST = '127.0.0.1'
 PORT = 5555
 
+print("=== Script Python avviato ===")
+print(f"Log salvato in: {log_path}")
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.bind((HOST, PORT))
-server_socket.listen(1)
-server_socket.setblocking(False)
 
-print(f"Server in ascolto su {HOST}:{PORT}")
+try:
+    server_socket.bind((HOST, PORT))
+    server_socket.listen(1)
+    server_socket.setblocking(False)
+    print(f"Server in ascolto su {HOST}:{PORT}")
+except Exception as e:
+    print(f"ERRORE bind: {e}")
+    sys.exit(1)
+
 print("Connetti Godot a questo indirizzo")
 print("Premi 'q' per uscire")
 
 client_socket = None
 
 # Inizializza MediaPipe Face Mesh
+print("Inizializzazione MediaPipe...")
 mp_face_mesh = mp.solutions.face_mesh
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -33,7 +51,14 @@ face_mesh = mp_face_mesh.FaceMesh(
 )
 
 # Inizializza webcam
+print("Apertura webcam...")
 cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("ERRORE: Impossibile aprire la webcam!")
+    sys.exit(1)
+print("Webcam aperta con successo")
+print("Loop principale avviato...")
+log_file.flush()
 
 while True:
     # Accetta connessioni in modalità non-bloccante
@@ -42,6 +67,7 @@ while True:
             client_socket, addr = server_socket.accept()
             client_socket.setblocking(False)
             print(f"Godot connesso da {addr}")
+            log_file.flush()
         except BlockingIOError:
             pass
     
@@ -92,10 +118,9 @@ while True:
             pitch = angles[0] * 360
             yaw = angles[1] * 360
             
-            # CALCOLO ROLL DAGLI OCCHI (più preciso!)
-            # Usa i landmark degli occhi esterni per calcolare l'inclinazione
-            left_eye_outer = face_landmarks.landmark[33]   # Occhio sinistro esterno
-            right_eye_outer = face_landmarks.landmark[263] # Occhio destro esterno
+            # CALCOLO ROLL DAGLI OCCHI
+            left_eye_outer = face_landmarks.landmark[33]
+            right_eye_outer = face_landmarks.landmark[263]
             
             # Converti in coordinate pixel
             left_eye_x = left_eye_outer.x * img_w
@@ -126,11 +151,9 @@ while True:
                 try:
                     message = json.dumps(data) + "\n"
                     client_socket.sendall(message.encode())
-                except 
-if client_socket:
-    client_socket.close()
-server_socket.close()(BrokenPipeError, ConnectionResetError):
+                except (BrokenPipeError, ConnectionResetError):
                     print("Godot disconnesso")
+                    log_file.flush()
                     client_socket = None
     
     # Mostra l'immagine
@@ -141,3 +164,7 @@ server_socket.close()(BrokenPipeError, ConnectionResetError):
 
 cap.release()
 cv2.destroyAllWindows()
+if client_socket:
+    client_socket.close()
+server_socket.close()
+log_file.close()

@@ -1,0 +1,10 @@
+=== Script Python avviato ===
+Log salvato in: C:\Users\balda\Documents\head\Scripts\python_debug.log
+Server in ascolto su 127.0.0.1:5555
+Connetti Godot a questo indirizzo
+Premi 'q' per uscire
+Inizializzazione MediaPipe...
+Apertura webcam...
+Webcam aperta con successo
+Loop principale avviato...
+Godot connesso da ('127.0.0.1', 53500)

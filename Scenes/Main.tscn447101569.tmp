@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://mum3j2gjrso0"]
+
+[ext_resource type="Script" uid="uid://b8vvqg4erxf1p" path="res://Scripts/godot_client.gd" id="1_r150o"]
+
+[node name="Node3D" type="Node3D" unique_id=562158089]
+script = ExtResource("1_r150o")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=1596262606]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=443466045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2751439)
