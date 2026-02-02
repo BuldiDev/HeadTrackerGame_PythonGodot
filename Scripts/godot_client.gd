@@ -8,6 +8,10 @@ var connected : bool = false
 var python_pid : int = 0
 var is_connecting : bool = false
 
+# Texture per la webcam
+var webcam_texture: ImageTexture
+@export var webcam_display: TextureRect  # Opzionale: collegalo nell'editor se vuoi mostrare la webcam
+
 func _ready():
 	# Verifica e installa dipendenze Python
 	await check_and_install_dependencies()
@@ -108,6 +112,26 @@ func _process(_delta):
 				yaw = json_result.get("yaw", 0.0)
 				roll = json_result.get("roll", 0.0)
 				print("Pitch: %.1f  Yaw: %.1f  Roll: %.1f" % [pitch, yaw, roll])
+				
+				# Decodifica il frame se presente
+				if json_result.has("frame"):
+					var frame_base64 = json_result["frame"]
+					var frame_bytes = Marshalls.base64_to_raw(frame_base64)
+					
+					# Crea un'immagine dal buffer JPEG
+					var image = Image.new()
+					var err = image.load_jpg_from_buffer(frame_bytes)
+					
+					if err == OK:
+						# Crea o aggiorna la texture
+						if webcam_texture == null:
+							webcam_texture = ImageTexture.create_from_image(image)
+						else:
+							webcam_texture.update(image)
+						
+						# Se hai collegato un TextureRect, aggiorna la visualizzazione
+						if webcam_display:
+							webcam_display.texture = webcam_texture
 				
 				# Usa questi valori!
 				# rotation_degrees.z = roll

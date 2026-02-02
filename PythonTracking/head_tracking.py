@@ -39,6 +39,7 @@ import websockets
 import json
 import os
 import urllib.request
+import base64
 
 # Scarica il modello face_landmarker se non esiste
 def download_face_model():
@@ -67,6 +68,7 @@ if not model_path:
 
 # Variabili globali per i dati
 current_data = {"pitch": 0.0, "yaw": 0.0, "roll": 0.0}
+current_frame = None
 clients = set()
 
 # Server WebSocket
@@ -81,10 +83,20 @@ async def handler(websocket):
 
 async def send_data():
     while True:
-        if clients:
-            message = json.dumps(current_data)
+        if clients and current_frame is not None:
+            # Codifica il frame in JPEG
+            _, buffer = cv2.imencode('.jpg', current_frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            frame_base64 = base64.b64encode(buffer).decode('utf-8')
+            
+            # Prepara messaggio con dati e frame
+            message = json.dumps({
+                "pitch": current_data["pitch"],
+                "yaw": current_data["yaw"],
+                "roll": current_data["roll"],
+                "frame": frame_base64
+            })
             websockets.broadcast(clients, message)
-        await asyncio.sleep(0.01)  # 100 FPS
+        await asyncio.sleep(0.033)  # ~30 FPS per il video
 
 async def main():
     # Avvia server WebSocket
@@ -192,6 +204,10 @@ async def main():
                     current_data["pitch"] = float(pitch)
                     current_data["yaw"] = float(yaw)
                     current_data["roll"] = float(roll)
+            
+            # Aggiorna il frame corrente per l'invio
+            global current_frame
+            current_frame = image
             
             if frame_count % 3 == 0:
                 await asyncio.sleep(0.001)

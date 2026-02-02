@@ -2,10 +2,25 @@
 
 [ext_resource type="Script" uid="uid://3mwhrqw10fgk" path="res://Scripts/godot_client.gd" id="1_r150o"]
 
-[node name="HeadController" type="Node3D" unique_id=562158089]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r150o"]
+
+[node name="HeadController" type="Node3D" unique_id=562158089 node_paths=PackedStringArray("webcam_display")]
 script = ExtResource("1_r150o")
+webcam_display = NodePath("CanvasLayer/MarginContainer/TextureRect")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=1596262606]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=443466045]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2751439)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1466151067]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1574381914]
+custom_minimum_size = Vector2(200, 200)
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer" unique_id=502448950]
+layout_mode = 2
+texture = SubResource("PlaceholderTexture2D_r150o")
+expand_mode = 2
