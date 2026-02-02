@@ -1,6 +1,6 @@
 extends Node
 
-var socket = WebSocketPeer.new()
+var socket: WebSocketPeer
 var pitch : float = 0.0
 var yaw : float = 0.0
 var roll : float = 0.0
@@ -9,21 +9,34 @@ var python_pid : int = 0
 var is_connecting : bool = false
 
 func _ready():
+	# Verifica e installa dipendenze Python
+	await check_and_install_dependencies()
+	
 	# Avvia lo script Python WebSocket
-	var script_path = ProjectSettings.globalize_path("res://Scripts/head_tracking_websocket.py")
+	var script_path = ProjectSettings.globalize_path("res://PythonTracking/head_tracking.py")
 	var python_exe = "python" if OS.get_name() == "Windows" else "python3"
+	
+	# Controlla se Python è installato
+	var check_output = []
+	var check_result = OS.execute(python_exe, ["--version"], check_output, true)
+	
+	if check_result != 0:
+		push_error("Python non trovato! Installa Python da https://www.python.org/downloads/")
+		return
 	
 	python_pid = OS.create_process(python_exe, [script_path])
 	
 	if python_pid > 0:
 		print("Python avviato con PID: ", python_pid)
-		# Aspetta che il server si avvii
-		await get_tree().create_timer(2.0).timeout
+		print("Head tracking in esecuzione...")
+		# Aspetta che il server si avvii e il modello MediaPipe si carichi
+		await get_tree().create_timer(5.0).timeout
 	else:
-		print("ERRORE: Impossibile avviare Python")
+		push_error("ERRORE: Impossibile avviare Python")
 		return
 	
-	# Connetti al server WebSocket
+	# Ora crea il socket e connetti
+	socket = WebSocketPeer.new()
 	is_connecting = true
 	var err = socket.connect_to_url("ws://127.0.0.1:8765")
 	if err == OK:
@@ -32,7 +45,49 @@ func _ready():
 		print("Errore WebSocket: ", err)
 		is_connecting = false
 
+func check_and_install_dependencies() -> void:
+	var python_exe = "python" if OS.get_name() == "Windows" else "python3"
+	
+	# Lista di moduli da verificare
+	var required_modules = ["mediapipe", "cv2", "numpy", "websockets", "requests"]
+	var missing_modules = []
+	
+	# Verifica quali moduli mancano
+	for module in required_modules:
+		var check_output = []
+		var check_result = OS.execute(python_exe, ["-c", "import " + module], check_output, true)
+		if check_result != 0:
+			missing_modules.append(module)
+	
+	if missing_modules.size() > 0:
+		print("========================================")
+		print("  INSTALLAZIONE DIPENDENZE PYTHON")
+		print("========================================")
+		print("Moduli mancanti: ", ", ".join(missing_modules))
+		print("Installazione in corso, attendere...")
+		print("")
+		
+		# Installa dipendenze dal requirements.txt
+		var requirements_path = ProjectSettings.globalize_path("res://PythonTracking/requirements.txt")
+		var install_output = []
+		var install_result = OS.execute(python_exe, ["-m", "pip", "install", "--user", "-r", requirements_path], install_output, true)
+		
+		if install_result == 0:
+			print("✓ Dipendenze installate con successo!")
+			print("")
+			# Attendi un momento per assicurarsi che tutto sia caricato
+			await get_tree().create_timer(2.0).timeout
+		else:
+			push_error("ERRORE nell'installazione delle dipendenze!")
+			print("Output: ", install_output)
+			push_error("Esegui manualmente: pip install -r PythonTracking/requirements.txt")
+	else:
+		print("✓ Dipendenze Python già installate")
+
 func _process(_delta):
+	if not socket:
+		return
+		
 	socket.poll()
 	
 	var state = socket.get_ready_state()
