@@ -1,17 +1,31 @@
 [gd_scene format=3 uid="uid://mum3j2gjrso0"]
 
 [ext_resource type="Script" uid="uid://3mwhrqw10fgk" path="res://Scripts/godot_client.gd" id="1_r150o"]
+[ext_resource type="PackedScene" uid="uid://b1ny8gcf8ye5d" path="res://Scenes/airplane.tscn" id="2_idj7w"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r150o"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_idj7w"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_idj7w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_idj7w"]
+ground_bottom_color = Color(0.11035753, 0.18605587, 0.22461483, 1)
+ground_horizon_color = Color(0, 0.72300833, 0.9009483, 1)
+energy_multiplier = 2.44
+
+[sub_resource type="Sky" id="Sky_kln2b"]
+sky_material = SubResource("ProceduralSkyMaterial_idj7w")
+
+[sub_resource type="Environment" id="Environment_rgh2o"]
+background_mode = 2
+sky = SubResource("Sky_kln2b")
+ambient_light_source = 3
+reflected_light_source = 2
 
 [node name="HeadController" type="Node3D" unique_id=562158089 node_paths=PackedStringArray("webcam_display")]
 script = ExtResource("1_r150o")
 webcam_display = NodePath("CanvasLayer/MarginContainer/TextureRect")
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=1596262606]
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=443466045]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2751439)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1466151067]
 
@@ -24,3 +38,81 @@ offset_bottom = 40.0
 layout_mode = 2
 texture = SubResource("PlaceholderTexture2D_r150o")
 expand_mode = 2
+
+[node name="Airplane" parent="." unique_id=151910066 instance=ExtResource("2_idj7w")]
+transform = Transform3D(-0.50000006, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, -0.50000006, 1.2618139, 5.195059, 1.6408958)
+
+[node name="Env" type="Node3D" parent="." unique_id=2008726730]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Env" unique_id=874305413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.08226, -10.34527, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Env" unique_id=410787850]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.16452, -9.430369, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Env" unique_id=81509512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.384514, -20.69054, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Env" unique_id=115377573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.466774, -19.775639, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Env" unique_id=1080023646]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.76386, -15.6495, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="Env" unique_id=760696031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.846115, -14.734599, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="Env" unique_id=2043537819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.066113, -25.99477, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="Env" unique_id=1646341901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70.14838, -25.079868, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="Env" unique_id=54250477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.08226, 11.676043, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="Env" unique_id=1306918975]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.16452, 12.590943, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="Env" unique_id=140188064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.384514, 1.3307724, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="Env" unique_id=1819509744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.466774, 2.2456741, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D13" type="MeshInstance3D" parent="Env" unique_id=223768360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.76386, 6.371813, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="Env" unique_id=2086921410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84.846115, 7.2867136, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D15" type="MeshInstance3D" parent="Env" unique_id=1768549808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.066113, -3.9734573, 0)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="Env" unique_id=620739345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70.14838, -3.0585556, 36.557735)
+mesh = SubResource("BoxMesh_idj7w")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Env" unique_id=1042251913]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Env/StaticBody3D" unique_id=81562798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -33, 0)
+shape = SubResource("WorldBoundaryShape3D_idj7w")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2120648969]
+environment = SubResource("Environment_rgh2o")

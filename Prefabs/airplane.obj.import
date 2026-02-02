@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bra2rmupr2huk"
+path="res://.godot/imported/airplane.obj-6c31a3febae5229df8ac1881b1dd3eb6.mesh"
+
+[deps]
+
+files=["res://.godot/imported/airplane.obj-6c31a3febae5229df8ac1881b1dd3eb6.mesh"]
+
+source_file="res://Prefabs/airplane.obj"
+dest_files=["res://.godot/imported/airplane.obj-6c31a3febae5229df8ac1881b1dd3eb6.mesh", "res://.godot/imported/airplane.obj-6c31a3febae5229df8ac1881b1dd3eb6.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

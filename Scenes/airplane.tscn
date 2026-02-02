@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://b1ny8gcf8ye5d"]
+
+[ext_resource type="Script" uid="uid://dyfm1jvwqfbxj" path="res://Scripts/airplane.gd" id="1_42yli"]
+[ext_resource type="ArrayMesh" uid="uid://bra2rmupr2huk" path="res://Prefabs/airplane.obj" id="2_cmvah"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_idj7w"]
+size = Vector3(6.8, 2.1312866, 1.8000001)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kln2b"]
+size = Vector3(2.1000001, 0.5, 10)
+
+[node name="Airplane" type="CharacterBody3D" unique_id=151910066]
+motion_mode = 1
+script = ExtResource("1_42yli")
+
+[node name="Airplane" type="MeshInstance3D" parent="." unique_id=820249098]
+mesh = ExtResource("2_cmvah")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1163319097]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 2.7)
+shape = SubResource("BoxShape3D_idj7w")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1484119769]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 2.7)
+shape = SubResource("BoxShape3D_kln2b")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=181040913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1)
