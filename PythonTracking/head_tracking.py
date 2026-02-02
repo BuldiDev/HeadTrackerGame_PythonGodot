@@ -118,7 +118,7 @@ async def main():
             print("ERRORE: Impossibile aprire la webcam")
             return
             
-        print("Webcam aperta. Premi 'q' per uscire")
+        print("✓ Webcam aperta - tracking in corso...")
         
         frame_count = 0
         
@@ -192,24 +192,11 @@ async def main():
                     current_data["pitch"] = float(pitch)
                     current_data["yaw"] = float(yaw)
                     current_data["roll"] = float(roll)
-                    
-                    cv2.putText(image, f"Pitch: {int(pitch)}", (20, 50), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                    cv2.putText(image, f"Yaw: {int(yaw)}", (20, 80), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                    cv2.putText(image, f"Roll: {int(roll)}", (20, 110), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            
-            cv2.imshow('Head Tracking', image)
-            
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
             
             if frame_count % 3 == 0:
                 await asyncio.sleep(0.001)
         
         cap.release()
-        cv2.destroyAllWindows()
         send_task.cancel()
 
 if __name__ == "__main__":
