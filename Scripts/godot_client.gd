@@ -62,14 +62,15 @@ func _process(_delta):
 	elif state == WebSocketPeer.STATE_CLOSED:
 		if connected:
 			print("Connessione persa")
+			connected = false
 			is_connecting = false
 		# Riprova a connettersi solo se non sta già provando
 		if not is_connecting:
 			is_connecting = true
 			await get_tree().create_timer(2.0).timeout
-			if not connected:  # Verifica ancora se non connesso
-				await get_tree().create_timer(2.0).timeout
-		socket.connect_to_url("ws://127.0.0.1:8765")
+			# Verifica che sia ancora chiuso prima di riconnettersi
+			if socket.get_ready_state() == WebSocketPeer.STATE_CLOSED and not connected:
+				socket.connect_to_url("ws://127.0.0.1:8765")
 
 func _exit_tree():
 	socket.close()
