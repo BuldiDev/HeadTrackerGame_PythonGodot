@@ -38,6 +38,7 @@ offset_bottom = 40.0
 layout_mode = 2
 texture = SubResource("PlaceholderTexture2D_r150o")
 expand_mode = 2
+flip_h = true
 
 [node name="Airplane" parent="." unique_id=151910066 instance=ExtResource("2_idj7w")]
 transform = Transform3D(-0.50000006, 0, -0.8660254, 0, 1, 0, 0.8660254, 0, -0.50000006, 1.2618139, 5.195059, 1.6408958)

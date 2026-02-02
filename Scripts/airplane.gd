@@ -33,8 +33,8 @@ func _physics_process(delta: float) -> void:
 		if abs(pitch_input) < 0.15:
 			pitch_input = 0.0
 		
-		# Roll: inclinazione testa controlla sterzo
-		roll_input = head_tracker.get_normalized_roll()  # -1 (sinistra) a 1 (destra)
+		# Roll: inclinazione testa controlla sterzo (invertito)
+		roll_input = -head_tracker.get_normalized_roll()  # Invertito: -1 (destra) a 1 (sinistra)
 		if abs(roll_input) < 0.1:
 			roll_input = 0.0
 		
@@ -59,19 +59,28 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED * delta * 3.0)
 		velocity.z = move_toward(velocity.z, 0, SPEED * delta * 3.0)
 	
-	# Roll (sterzo) funziona solo in volo
-	if is_flying and abs(roll_input) > 0.01:
-		rotate_y(roll_input * 1.5 * delta)
+	# Rotazione aereo basata sui controlli
+	if is_flying:
+		# Pitch: ruota aereo su asse X (beccheggio)
+		if abs(pitch_input) > 0.01:
+			rotate_object_local(Vector3.RIGHT, pitch_input * 0.8 * delta)
+		
+		# Roll: ruota aereo su asse Z (rollio) 
+		if abs(roll_input) > 0.01:
+			rotate_object_local(Vector3.FORWARD, roll_input * 1.2 * delta)
+	
+	# Calcola la direzione "su" dell'aereo per il movimento
+	var plane_up = global_transform.basis.y
 	
 	# Applica gravità sempre
 	velocity.y -= 9.8 * delta
 	
-	# Pitch controlla l'altitudine (funziona sempre per permettere decollo)
-	if abs(pitch_input) > 0.01:
-		# Testa su (pitch negativo) = aereo sale, testa giù (pitch positivo) = aereo scende
-		velocity.y += pitch_input * 15.0 * delta
+	# Il pitch dell'aereo influenza il movimento verticale
+	if is_accelerating and is_flying:
+		# Quando acceleri, l'aereo si muove nella direzione in cui punta
+		velocity.y += plane_up.y * SPEED * 2.0 * delta
 	
-	# Limita velocità verticale (range più ampio)
+	# Limita velocità verticale
 	velocity.y = clamp(velocity.y, -15.0, 15.0)
 
 	move_and_slide()
